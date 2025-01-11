@@ -48,7 +48,7 @@ class Gray_scale_filter:
 #modo blurred
 class Blurr_filter:
     @staticmethod
-    apply_filter(img : Imagem) -> Imagem:
+    def apply_filter(img : Imagem) -> Imagem:
         aux = img
         if img.get_img():
             filtered_image = aux.filter(ImageFilter.BLUR)
