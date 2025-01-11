@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageFilter
 from Imagem import Imagem
 
 #classe filtros:
@@ -46,3 +46,16 @@ class Gray_scale_filter:
 #modo contorno
 
 #modo blurred
+class Blurr_filter:
+    @staticmethod
+    apply_filter(img : Imagem) -> Imagem:
+        aux = img
+        if img.get_img():
+            filtered_image = aux.filter(ImageFilter.BLUR)
+            
+            filtered_image.save("AV#/imagens teste/result(blur).jpg",)
+            
+            return filtered_image
+
+
+    
