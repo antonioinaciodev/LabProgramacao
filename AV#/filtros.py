@@ -23,7 +23,7 @@ class B_and_W_filter:
 # Filtro cartoon
 class Cartoon_filter:
 
-     @staticmethod
+    @staticmethod
     def apply_filter(img: Imagem) -> Imagem:
         aux = img
         if img.get_img():
@@ -31,7 +31,7 @@ class Cartoon_filter:
             
             aux.set_img(filtered_image)
 
-            filtered_image.save("AV#/imagens teste/result(cartoon).jpg",)
+            filtered_image.save("C:/AV#/imagens teste/result(cartoon).jpg",)
             
             return aux
     
