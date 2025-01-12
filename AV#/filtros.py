@@ -21,6 +21,21 @@ class B_and_W_filter:
             return aux
 
 # Filtro cartoon
+class Cartoon_filter:
+
+     @staticmethod
+    def apply_filter(img: Imagem) -> Imagem:
+        aux = img
+        if img.get_img():
+            filtered_image = aux.get_img().filter(ImageFilter.SMOOTH_MORE)
+            
+            aux.set_img(filtered_image)
+
+            filtered_image.save("AV#/imagens teste/result(cartoon).jpg",)
+            
+            return aux
+    
+   
 
 # Escala de cinza
 class Gray_scale_filter:
