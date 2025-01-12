@@ -3,7 +3,7 @@ from Imagem import Imagem
 
 #classe filtros:
 
-#filtro preto e branco 
+# Filtro preto e branco 
 class B_and_W_filter:
     
     @staticmethod
@@ -16,15 +16,15 @@ class B_and_W_filter:
 
             aux.set_img(filtered_img)
 
-            filtered_img.save("imagens teste/result.jpg",)
+            filtered_img.save("AV#/imagens teste/result(B&W).jpg",)
 
             return aux
 
-#filtro cartoon
+# Filtro cartoon
 
-#escala de cinza
+# Escala de cinza
 class Gray_scale_filter:
-
+    
     @staticmethod
     def apply_filter(img : Imagem) -> Imagem:
         aux = img
@@ -40,22 +40,52 @@ class Gray_scale_filter:
 
             return aux
 
-
-#filtro negativo 
-
-#modo contorno
-
-#modo blurred
-class Blurr_filter:
+# Filtro negativo
+class Negative_filter:
+    
     @staticmethod
-    def apply_filter(img : Imagem) -> Imagem:
+    def apply_filter(img: Imagem) -> Imagem:
         aux = img
         if img.get_img():
-            filtered_image = aux.filter(ImageFilter.BLUR)
+            filtered_image = aux.get_img()
             
+            inverted_image = Image.eval(filtered_image, lambda pixel: 255 - pixel)
+            
+            aux.set_img(inverted_image)
+            
+            inverted_image.save("AV#/imagens teste/result(negativo).jpg",)
+            
+            return aux
+
+# Modo contorno
+class Contour_filter:
+    @staticmethod
+    def apply_filter(img: Imagem) -> Imagem:
+        aux = img
+        if img.get_img():
+            filtered_image = img.get_img().filter(ImageFilter.CONTOUR)
+            
+            aux.set_img(filtered_image)
+            
+            filtered_image.save("AV#/imagens teste/result(contorno).jpg",)
+            
+            return img
+
+# Modo blurred
+class Blurr_filter:
+    
+    @staticmethod
+    def apply_filter(img: Imagem) -> Imagem:
+        aux = img
+        if img.get_img():
+            filtered_image = aux.get_img().filter(ImageFilter.BLUR)
+            
+            aux.set_img(filtered_image)
+
             filtered_image.save("AV#/imagens teste/result(blur).jpg",)
             
-            return filtered_image
+            return aux
+
 
 
     
