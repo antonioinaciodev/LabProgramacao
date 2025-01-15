@@ -37,6 +37,9 @@ class Imagem:
     
     def set_img(self,img):
         self.img = img
+    
+    def set_img_path(self,path : str):
+        self.img_path = path
         
     def show_image(self):
         if self.img:

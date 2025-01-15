@@ -1,5 +1,5 @@
 #TODO
-1-consertar erro dos path sobrepostos nas classes filtros 
+1-consertar erro dos path sobrepostos nas classes filtros- feito
 2- terminar a classe cartoon
 3- tratar de exceções e boas praticas 
 4- terminar a classe principal

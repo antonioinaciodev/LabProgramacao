@@ -1,5 +1,7 @@
 from PIL import Image, ImageFilter
 from Imagem import Imagem
+import os
+from copy import deepcopy
 
 #classe filtros:
 
@@ -8,7 +10,7 @@ class B_and_W_filter:
     
     @staticmethod
     def apply_filter(img : Imagem) -> Imagem:
-        aux = img
+        aux = deepcopy(img)
         if img.get_img():
             filtered_img = aux.get_img()
 
@@ -16,8 +18,15 @@ class B_and_W_filter:
 
             aux.set_img(filtered_img)
 
-            filtered_img.save("AV#/imagens teste/result(B&W).jpg",)
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
 
+            output_path = os.path.join(output_dir, "result(B&W).jpg")
+            filtered_img.save(output_path)
+            #arrumar esse esquema de salvar,isso so funciona localmente para nos que estamos fazendo o jogo
+            #e não coloque o path puro,pq isso so funciona no seu pc
+            aux.set_img_path(output_path)
+            #todo isso e uma resolucão temporaria para evitar o erro de um path colado no outro 
             return aux
 
 # Filtro cartoon
@@ -25,14 +34,20 @@ class Cartoon_filter:
 
     @staticmethod
     def apply_filter(img: Imagem) -> Imagem:
-        aux = img
+        aux = deepcopy(img)
         if img.get_img():
             filtered_image = aux.get_img().filter(ImageFilter.SMOOTH_MORE)
             
             aux.set_img(filtered_image)
 
-            filtered_image.save("C:/AV#/imagens teste/result(cartoon).jpg",)
-            
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
+
+            output_path = os.path.join(output_dir, "result(cartoon).jpg")
+            filtered_image.save(output_path)
+
+            aux.set_img_path(output_path)
+
             return aux
     
    
@@ -42,7 +57,7 @@ class Gray_scale_filter:
     
     @staticmethod
     def apply_filter(img : Imagem) -> Imagem:
-        aux = img
+        aux = deepcopy(img)
         if img.get_img():
             #fazer uma pequena alteração para que a pessoa posso colocar o nome do arquivo
             filtered_img = aux.get_img()
@@ -51,7 +66,13 @@ class Gray_scale_filter:
 
             aux.set_img(filtered_img)
 
-            filtered_img.save("AV#/imagens teste/result(cinza).jpg",)
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
+
+            output_path = os.path.join(output_dir, "result(cinza).jpg")
+            filtered_img.save(output_path)
+
+            aux.set_img_path(output_path)
 
             return aux
 
@@ -60,15 +81,21 @@ class Negative_filter:
     
     @staticmethod
     def apply_filter(img: Imagem) -> Imagem:
-        aux = img
+        aux = deepcopy(img)
         if img.get_img():
             filtered_image = aux.get_img()
             
             inverted_image = Image.eval(filtered_image, lambda pixel: 255 - pixel)
             
             aux.set_img(inverted_image)
+
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
             
-            inverted_image.save("AV#/imagens teste/result(negativo).jpg",)
+            output_path = os.path.join(output_dir, "result(negativo).jpg")
+            inverted_image.save(output_path)
+
+            aux.set_img_path(output_path)
             
             return aux
 
@@ -76,14 +103,20 @@ class Negative_filter:
 class Contour_filter:
     @staticmethod
     def apply_filter(img: Imagem) -> Imagem:
-        aux = img
+        aux = deepcopy(img)
         if img.get_img():
             filtered_image = img.get_img().filter(ImageFilter.CONTOUR)
             
             aux.set_img(filtered_image)
+
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
             
-            filtered_image.save("AV#/imagens teste/result(contorno).jpg",)
+            output_path = os.path.join(output_dir, "result(contorno).jpg")
+            filtered_image.save(output_path)
             
+            aux.set_img_path(output_path)
+
             return img
 
 # Modo blurred
@@ -91,14 +124,20 @@ class Blurr_filter:
     
     @staticmethod
     def apply_filter(img: Imagem) -> Imagem:
-        aux = img
+        aux = deepcopy(img)
         if img.get_img():
             filtered_image = aux.get_img().filter(ImageFilter.BLUR)
             
             aux.set_img(filtered_image)
 
-            filtered_image.save("AV#/imagens teste/result(blur).jpg",)
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
+
+            output_path = os.path.join(output_dir, "result(blur).jpg")
+            filtered_image.save(output_path)
             
+            aux.set_img_path(output_path)
+
             return aux
 
 
