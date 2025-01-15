@@ -44,13 +44,11 @@ class Imagem:
     def show_image(self):
         if self.img:
             try:
-                plt.imshow(self.img)
-                plt.axis("off")
-                plt.show()
+                self.img.show() 
             except Exception as e:
                 print(f"Erro encontrado: {e}")
         else:
-            print("imagem não encontrada")
+            print("Imagem não encontrada")
 
     def get_img_extension(self) -> str:
         if self.img:
