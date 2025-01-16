@@ -1,9 +1,11 @@
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageOps
 from Imagem import Imagem
 import os
 from copy import deepcopy
 
 #classe filtros:
+
+#todo tratar possiveis erros colocar try e expect
 
 # Filtro preto e branco 
 class B_and_W_filter:
@@ -34,7 +36,9 @@ class Cartoon_filter:
 
     @staticmethod
     def apply_filter(img: Imagem) -> Imagem:
-        aux = img.get_img()  # Get the original image object
+        _aux = deepcopy(img)
+        aux = _aux.get_img()
+         # Get the original image object
         if aux:  # Ensure the image exists
             # Step 1: Edge Detection
             edges = aux.convert("L")  # Convert to grayscale
@@ -53,12 +57,45 @@ class Cartoon_filter:
                 simplified_image, Image.new("RGB", simplified_image.size, (0, 0, 0)), edges
             )
 
-            cartoonized_image.save("C:\\Users\w11\Documents\lab\AV#\cartoon")
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
 
-            return cartoonized_image
+            output_path = os.path.join(output_dir, "result(cartoon).jpg")
+            cartoonized_image.save(output_path)
+
+            _aux.set_img(cartoonized_image)
+            _aux.set_img_path(output_path)
+
+            return _aux
         else:
             raise ValueError("Invalid image provided.")
     
+    
+   
+
+# Escala de cinza
+class Gray_scale_filter:
+    
+    @staticmethod
+    def apply_filter(img : Imagem) -> Imagem:
+        aux = deepcopy(img)
+        if img.get_img():
+            #fazer uma pequena alteração para que a pessoa posso colocar o nome do arquivo
+            filtered_img = aux.get_img()
+
+            filtered_img = filtered_img.convert('L')
+
+            aux.set_img(filtered_img)
+
+            output_dir = "AV/imagens_teste"
+            os.makedirs(output_dir, exist_ok=True)
+
+            output_path = os.path.join(output_dir, "result(cinza).jpg")
+            filtered_img.save(output_path)
+
+            aux.set_img_path(output_path)
+
+            return aux
     
    
 
