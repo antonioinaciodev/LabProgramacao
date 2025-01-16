@@ -1,6 +1,6 @@
 #TODO
 1-consertar erro dos path sobrepostos nas classes filtros- feito
-2- terminar a classe cartoon
+2- terminar a classe cartoon - feito
 3- tratar de exceções e boas praticas 
 4- terminar a classe principal
 5- fazer o gui
