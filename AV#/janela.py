@@ -42,6 +42,13 @@ def bt2_click():
         auxcontorno = Contour_filter.apply_filter(imagem)
         auxcontorno.show_image()
 
+def bt3_click():
+    link = ed.get()
+    if link:
+        imagem.set_public_img(link)
+        lb1["text"]=f"Imagem carregada"
+
+
 janela = Tk()
 
 janela.title("trabalho final")
@@ -52,9 +59,18 @@ lb.place(x=100, y=100)
 lb1=Label(janela,text="bem vindo")
 lb1.place(x=100,y=220)
 
-bt1 =Button(janela, width=16, text="selecionar imagem")
+bt1 =Button(janela, width=10, text="img local")
 bt1.place(x=180,y=100)
 bt1["command"] = partial(bt1_click)
+
+lb3 = Label(janela, text="internet:")
+lb.place(x=280, y=100)
+
+ed= Entry(janela)
+ed.place(x=340, y=100)
+
+bt3 =Button(janela, width=8, text="baixar",command=bt3_click)
+bt3.place(x=480, y=95)
 
 bt2 =Button(janela, width=8, text="aplicar",command=bt2_click)
 bt2.place(x=250,y=150)
@@ -69,6 +85,6 @@ cb.place(x=180,y=130)
 
 
 
-janela.geometry("300x300+200+200")
+janela.geometry("600x600+200+200")
 
 janela.mainloop()
