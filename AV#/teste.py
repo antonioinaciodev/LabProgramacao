@@ -32,3 +32,8 @@ print(auxnegative.get_img_path())
 auxcontorno = Contour_filter.apply_filter(imagem)
 auxcontorno.show_image()
 print(auxcontorno.get_img_path())
+
+#filtro cartoon 
+aux_cartoon = Cartoon_filter.apply_filter(imagem)
+aux_cartoon.show_image()
+print(aux_cartoon.get_img_path())
