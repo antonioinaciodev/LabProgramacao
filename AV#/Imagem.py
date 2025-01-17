@@ -14,7 +14,7 @@ class Imagem:
             self.img = Image.open(path)
 
         except (FileNotFoundError,UnidentifiedImageError) as e:
-            print(f"erro encontrado: {e}")
+            return f"erro encontrado: {e}"
 
     def set_public_img(self,url):
         aux = Download()
@@ -24,10 +24,10 @@ class Imagem:
                 self.img_path = aux_path
                 self.img = Image.open(aux_path)
             except UnidentifiedImageError as e:
-                print(f"erro encontrado: {e}")
+                return f"erro encontrado: {e}"
 
         else:
-            print("erro ao baixar")
+            return "erro ao baixar"
 
     def get_img_path(self) -> str:
         return self.img_path
@@ -46,12 +46,12 @@ class Imagem:
             try:
                 self.img.show() 
             except Exception as e:
-                print(f"Erro encontrado: {e}")
+                return f"Erro encontrado: {e}"
         else:
-            print("Imagem não encontrada")
+            return "Imagem não encontrada"
 
     def get_img_extension(self) -> str:
         if self.img:
             return self.img_path.split(".")[1]
         else:
-            print("imagem vazia")
+            return "imagem vazia"
