@@ -85,32 +85,39 @@ class App:
         self.lb1["text"] = f"Imagem carregada: {arquivos[0]}"
     #botão que aplica o filtro
     def bt2_click(self):
-        filtro = self.cb.get()
-        if filtro == "Preto e Branco":
-            uxbw = B_and_W_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
-            uxbw.show_image()
+        try:
+            filtro = self.cb.get()
+            resultado = None # modificaçao que eu fiz para tratamento de exceção 
+            if filtro == "Preto e Branco":
+                resultado = B_and_W_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+                
 
-        elif filtro == "Escala Cinza":
-            auxgray = Gray_scale_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
-            auxgray.show_image()
+            elif filtro == "Escala Cinza":
+                resultado = Gray_scale_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+             
 
-        elif filtro == "Efeito Blurr":
-            auxblurr = Blurr_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
-            auxblurr.show_image()
+            elif filtro == "Efeito Blurr":
+                resultado= Blurr_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+                
 
-        elif filtro == "Filtro Negativo":
-            auxnegative = Negative_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
-            auxnegative.show_image()
+            elif filtro == "Filtro Negativo":
+                resultado = Negative_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+                
+            elif filtro == "Filtro Contorno":
+                resultado = Contour_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+                
+            
+            elif filtro == "Filtro Cartoon":
+                resultado = Cartoon_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+               
+            if isinstance(resultado,str):
+                messagebox.showerror("Erro", resultado)
+            else:
+                resultado.show_image()
+                messagebox.showinfo("Imagem carregada!", "A imagem foi exibida com o filtro escolhido.")
 
-        elif filtro == "Filtro Contorno":
-            auxcontorno = Contour_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
-            auxcontorno.show_image()
-        
-        elif filtro == "Filtro Cartoon":
-            auxcartoon = Cartoon_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
-            auxcartoon.show_image()
-
-        messagebox.showinfo("Imagem carregada!", "A imagem foi exibida com o filtro escolhido.")
+        except Exception as e:
+             messagebox.showerror("Erro Inesperado", f"Detalhes: {e}")
 
     def bt3_click(self):
         link = self.ed.get()
