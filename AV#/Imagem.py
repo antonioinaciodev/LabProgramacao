@@ -16,8 +16,8 @@ class Imagem:
         except (FileNotFoundError,UnidentifiedImageError) as e:
             return f"erro encontrado: {e}"
 
-    def set_public_img(self,url):
-        aux = Download()
+    def set_public_img(self,url,path):
+        aux = Download(path)
         aux_path = aux.download_img(url)
         if aux_path:
             try:

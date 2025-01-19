@@ -3,13 +3,15 @@ import requests
 
 #todo fazer uma checagem de protocolo nos url
 class Download:
-    def __init__(self):
-        self.output = "Download_output"
-        if not os.path.exists(self.output):
-            os.makedirs(self.output) #vai abrir uma pasta onde esse arquivi estiver 
-
+    def __init__(self,path = None):
+        self.output = path
+        
     def download_img(self,url : str):
+        if not self.output :
+            return "Diretorio não especificado"
+         
         try:
+            
             arc_name = os.path.join(self.output,url.split("/")[-1]) 
 
             #download
