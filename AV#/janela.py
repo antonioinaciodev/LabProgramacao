@@ -3,6 +3,7 @@ from tkinter import ttk
 from functools import partial
 from Imagem import Imagem
 from filtros import *
+from urllib.parse import urlparse
 
 
 class App:
@@ -65,6 +66,11 @@ class App:
 
         self.bt4 = Button(self.janela, width=8, text="Sair", command=self.bt4_click)
         self.bt4.pack()
+    
+    def is_valid_url(self,url):
+        parsed = urlparse(url)
+        # Verifica se a URL tem esquema (http/https) e domínio (netloc)
+        return bool(parsed.scheme) and bool(parsed.netloc)
 
     def escolher_diretorio(self):
         diretorio = filedialog.askdirectory()
@@ -76,6 +82,8 @@ class App:
 
     def bt1_click(self):
         arquivos = filedialog.askopenfilenames()
+        if self.caminho_onde_salvar is None:
+             messagebox.showwarning("Erro", "o Usuário não definiu uma pasta para salvar os arquivos ")
         if not arquivos:
             self.lb1["text"] = "Nenhum arquivo selecionado."
             messagebox.showwarning("Erro", "Por favor, adicione uma imagem ou URL!")
@@ -120,14 +128,22 @@ class App:
              messagebox.showerror("Erro Inesperado", f"Detalhes: {e}")
 
     def bt3_click(self):
-        link = self.ed.get()
-        if self.caminho_onde_salvar == None:
-            messagebox.showinfo("Nenhum diretorio escolhido")
-        if link:
-            self.imagem.set_public_img(link,self.caminho_onde_salvar)
-            messagebox.showinfo("Imagem carregada!", "A imagem escolhida foi carregada com sucesso!")
-        else:
-            messagebox.showinfo("Nenhum endereço foi passado")
+        try:
+            link = self.ed.get()
+            if self.is_valid_url(link):
+                if self.caminho_onde_salvar == None:
+                    messagebox.showinfo("Nenhum diretorio escolhido")
+                    return
+                if link:
+                    self.imagem.set_public_img(link,self.caminho_onde_salvar)
+                    messagebox.showinfo("Imagem carregada!", "A imagem escolhida foi carregada com sucesso!")
+                else:
+                    messagebox.showerror("Nenhum endereço foi passado")
+            else:
+                messagebox.showerror("endereço inválido")
+                
+        except Exception as e:
+                messagebox.showerror("Erro Inesperado", f"Detalhes: {e}")
 
     def bt4_click(self):
         self.janela.destroy()

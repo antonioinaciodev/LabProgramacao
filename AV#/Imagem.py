@@ -24,10 +24,9 @@ class Imagem:
                 self.img_path = aux_path
                 self.img = Image.open(aux_path)
             except UnidentifiedImageError as e:
-                return f"erro encontrado: {e}"
-
+                raise RuntimeError(f"erro encontrado: {e}")
         else:
-            return "erro ao baixar"
+            raise RuntimeError("Erro ao baixar a imagem. Verifique o link ou o diretório.")
 
     def get_img_path(self) -> str:
         return self.img_path
