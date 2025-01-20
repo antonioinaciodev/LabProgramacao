@@ -17,15 +17,16 @@ class App:
         self.janela.title("Trabalho Final")
         self.janela.geometry("600x600+200+200")
 
+        # Componentes da interface gráfica
+        self.lb1 = Label(self.janela, text="BEM-VINDO!")
+        self.lb1.pack()
+        Label(self.janela, text="").pack()
+
         self.lb_dir = Label(self.janela, text="Escolha o diretório onde as imagens baixadas ou editadas ficarão:")
         self.lb_dir.pack()
 
         self.bt_dir = Button(self.janela, width=15, text="Escolher Diretório", command=self.escolher_diretorio)
         self.bt_dir.pack()
-
-        # Componentes da interface gráfica
-        self.lb1 = Label(self.janela, text="BEM-VINDO!")
-        self.lb1.pack()
 
         Label(self.janela, text="").pack()
         Label(self.janela, text="Selecione: ").pack()
@@ -57,6 +58,7 @@ class App:
         ]
 
         self.cb = ttk.Combobox(self.janela, values=self.listFiltros)
+        self.cb.set("Selecione:")
         self.cb.pack()
 
         self.bt2 = Button(self.janela, width=8, text="Aplicar", command=self.bt2_click)
@@ -92,10 +94,19 @@ class App:
         self.imagem.set_local_img(arquivos[0])
         self.lb1["text"] = f"Imagem carregada: {arquivos[0]}"
     #botão que aplica o filtro
+    
     def bt2_click(self):
         try:
             filtro = self.cb.get()
             resultado = None # modificaçao que eu fiz para tratamento de exceção 
+
+            if not filtro:
+                messagebox.showwarning("Erro", "Por favor, selecione um filtro!")
+                return
+            if not self.imagem.get_img():
+                messagebox.showwarning("Erro", "Por favor, carregue uma imagem ou forneça uma URL!")
+                return
+
             if filtro == "Preto e Branco":
                 resultado = B_and_W_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
                 
@@ -117,6 +128,10 @@ class App:
             
             elif filtro == "Filtro Cartoon":
                 resultado = Cartoon_filter.apply_filter(self.imagem,self.caminho_onde_salvar)
+
+            elif filtro not in self.listFiltros:
+                messagebox.showwarning("Erro", "Por favor, selecione um filtro válido!")
+                return
                
             if isinstance(resultado,str):
                 messagebox.showerror("Erro", resultado)
@@ -130,20 +145,22 @@ class App:
     def bt3_click(self):
         try:
             link = self.ed.get()
-            if self.is_valid_url(link):
-                if self.caminho_onde_salvar == None:
-                    messagebox.showinfo("Nenhum diretorio escolhido")
-                    return
-                if link:
-                    self.imagem.set_public_img(link,self.caminho_onde_salvar)
-                    messagebox.showinfo("Imagem carregada!", "A imagem escolhida foi carregada com sucesso!")
-                else:
-                    messagebox.showerror("Nenhum endereço foi passado")
+
+            if not link:
+                messagebox.showerror("Erro!", "Nenhum endereço foi passado!")
             else:
-                messagebox.showerror("endereço inválido")
+                if self.is_valid_url(link):
+                    if self.caminho_onde_salvar == None:
+                        messagebox.showinfo("Nenhum diretorio escolhido")
+                        return
+                    if link:
+                        self.imagem.set_public_img(link,self.caminho_onde_salvar)
+                        messagebox.showinfo("Imagem carregada!", "A imagem escolhida foi carregada com sucesso!")
+                else:
+                    messagebox.showerror("Erro!", "Endereço inválido!")
                 
         except Exception as e:
-                messagebox.showerror("Erro Inesperado", f"Detalhes: {e}")
+                messagebox.showerror("Erro Inesperado!", f"Detalhes: {e}")
 
     def bt4_click(self):
         self.janela.destroy()
