@@ -133,10 +133,14 @@ class Negative_filter:
     def apply_filter(img: Imagem,path) -> Imagem:
         try:
             aux = deepcopy(img)
-            if img.get_img():
-                filtered_image = aux.get_img()
-                
-                inverted_image = Image.eval(filtered_image, lambda pixel: 255 - pixel)
+            original_img = img.get_img()
+
+            if original_img:
+
+                if original_img.mode not in ('RGB', 'L'):
+                    original_img = original_img.convert('RGB')
+
+                inverted_image = Image.eval(original_img, lambda pixel: 255 - pixel)
                 
                 aux.set_img(inverted_image)
 
@@ -165,8 +169,14 @@ class Contour_filter:
     def apply_filter(img: Imagem,path) -> Imagem:
         try:
             aux = deepcopy(img)
-            if img.get_img():
-                filtered_image = img.get_img().filter(ImageFilter.CONTOUR)
+            original_img = img.get_img()
+            
+            if original_img:
+
+                if original_img.mode not in ('RGB', 'L'):
+                    original_img = original_img.convert('RGB')
+
+                filtered_image = original_img.filter(ImageFilter.CONTOUR)
                 
                 aux.set_img(filtered_image)
 
@@ -197,8 +207,13 @@ class Blurr_filter:
     def apply_filter(img: Imagem,path) -> Imagem:
         try:
             aux = deepcopy(img)
-            if img.get_img():
-                filtered_image = aux.get_img().filter(ImageFilter.BLUR)
+            original_img = img.get_img()
+            if original_img:
+
+                if original_img.mode not in ('RGB', 'L'):
+                    original_img = original_img.convert('RGB')
+
+                filtered_image = original_img.filter(ImageFilter.BLUR)
                 
                 aux.set_img(filtered_image)
 

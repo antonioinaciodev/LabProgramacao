@@ -1,4 +1,0 @@
-#TODO
-1- terminar a classe principal
-2- fazer o gui
-

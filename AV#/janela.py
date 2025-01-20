@@ -125,7 +125,7 @@ class App:
                 messagebox.showinfo("Imagem carregada!", "A imagem foi exibida com o filtro escolhido.")
 
         except Exception as e:
-             messagebox.showerror("Erro Inesperado", f"Detalhes: {e}")
+             messagebox.showerror("+Erro Inesperado", f"Detalhes: {e}")
 
     def bt3_click(self):
         try:
