@@ -1,6 +1,6 @@
 from ImgDownload import Download
 from PIL import Image,UnidentifiedImageError
-import matplotlib.pyplot as plt #pequeno erro no visualizador do linux corrigir depois 
+import matplotlib.pyplot as plt
 
 class Imagem:
     def __init__(self):
@@ -8,7 +8,6 @@ class Imagem:
         self.img = None
    
     def set_local_img(self,path):
-        #fazer um menu para a pessoa escolher no gui
         try:
             self.img_path = path
             self.img = Image.open(path)

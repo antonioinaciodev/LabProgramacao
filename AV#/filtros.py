@@ -51,15 +51,12 @@ class Cartoon_filter:
         try:
             _aux = deepcopy(img)
             aux = _aux.get_img()
-            # Get the original image object
-            if aux:  # Ensure the image exists
-                # Step 1: Edge Detection
-                edges = aux.convert("L")  # Convert to grayscale
-                edges = edges.filter(ImageFilter.FIND_EDGES)  # Detect edges
-                edges = ImageOps.invert(edges)  # Invert edges
-                edges = edges.point(lambda x: 0 if x < 50 else 255)  # Thresholding
+            if aux:
+                edges = aux.convert("L")
+                edges = edges.filter(ImageFilter.FIND_EDGES)
+                edges = ImageOps.invert(edges)
+                edges = edges.point(lambda x: 0 if x < 50 else 255)
 
-                # Step 2: Color Simplification
                 simplified_image = aux.filter(ImageFilter.MedianFilter(size=5))  # Reduce noise
                 simplified_image = simplified_image.quantize(colors=64)  # Reduce colors
 
@@ -98,7 +95,6 @@ class Gray_scale_filter:
         try:
             aux = deepcopy(img)
             if img.get_img():
-                #fazer uma pequena alteração para que a pessoa posso colocar o nome do arquivo
                 filtered_img = aux.get_img()
 
                 filtered_img = filtered_img.convert('L')

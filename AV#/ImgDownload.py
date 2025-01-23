@@ -1,7 +1,6 @@
 import os
 import requests 
 
-#todo fazer uma checagem de protocolo nos url
 class Download:
     def __init__(self,path = None):
         self.output = path

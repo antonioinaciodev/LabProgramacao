@@ -1,10 +1,9 @@
-from tkinter import Tk, Label, Button, Entry, filedialog, messagebox
-from tkinter import ttk
-from functools import partial
-from Imagem import Imagem
-from filtros import *
+from tkinter import *
+from tkinter import ttk, filedialog, messagebox
 from urllib.parse import urlparse
-
+from Imagem import *
+from Filtros import *
+import os
 
 class App:
     def __init__(self):
@@ -12,41 +11,53 @@ class App:
         self.lista_de_imagens = []
         self.caminho_onde_salvar = None
 
-        # Inicialização da janela principal
+        # Tela inicial (menu principal)
+        self.menu_inicial = Tk()
+        self.menu_inicial.title("Filters - Menu")
+        self.menu_inicial.geometry("500x650+300+200")
+        self.menu_inicial.configure(bg="#e8f1f8", highlightbackground="#000000", highlightthickness=3)
+
+        # Centralização de widgets no menu principal
+        frame_menu = Frame(self.menu_inicial, bg="#e8f1f8")
+        frame_menu.pack(expand=True)
+
+        Label(frame_menu, text="Filters", font=("Broadway", 32, "bold"), bg="#e8f1f8", fg="#000000").pack(pady=20)
+
+        self.create_button(frame_menu, "Editor", self.abrir_editor, "#4aa3df").pack(pady=10)
+        self.create_button(frame_menu, "Exit", self.menu_inicial.destroy, "#ff4d4d").pack(pady=10)
+
+    def abrir_editor(self):
+        self.menu_inicial.withdraw()
+        self.janela_principal()
+
+    def voltar_menu(self):
+        self.janela.destroy()
+        self.menu_inicial.deiconify()
+
+    def janela_principal(self):
         self.janela = Tk()
-        self.janela.title("Trabalho Final")
-        self.janela.geometry("600x600+200+200")
+        self.janela.title("Filters - Editor")
+        self.janela.geometry("500x650+300+200")
+        self.janela.configure(bg="#e8f1f8", highlightbackground="#000000", highlightthickness=3)
 
-        # Componentes da interface gráfica
-        self.lb1 = Label(self.janela, text="BEM-VINDO!")
-        self.lb1.pack()
-        Label(self.janela, text="").pack()
+        frame_principal = Frame(self.janela, bg="#e8f1f8")
+        frame_principal.pack(expand=True, fill=BOTH)
 
-        self.lb_dir = Label(self.janela, text="Escolha o diretório onde as imagens baixadas ou editadas ficarão:")
-        self.lb_dir.pack()
+        Label(frame_principal, text="Editor", font=("Broadway", 20, "bold"), bg="#e8f1f8", fg="#000000").pack(pady=10)
 
-        self.bt_dir = Button(self.janela, width=15, text="Escolher Diretório", command=self.escolher_diretorio)
-        self.bt_dir.pack()
+        Label(frame_principal, text="Escolha o diretório onde as imagens editadas serão salvas:", font=("Arial", 12), bg="#e8f1f8", fg="#3b6a91").pack(pady=5)
+        self.create_button(frame_principal, "Escolher Diretório", self.escolher_diretorio, "#4aa3df").pack(pady=5)
 
-        Label(self.janela, text="").pack()
-        Label(self.janela, text="Selecione: ").pack()
+        Label(frame_principal, text="Selecione:", font=("Arial", 12), bg="#e8f1f8", fg="#3b6a91").pack(pady=10)
+        self.create_button(frame_principal, "Imagem Local", self.bt1_click, "#4aa3df").pack(pady=5)
+        Label(frame_principal, text="OU", font=("Arial", 12, "italic"), bg="#e8f1f8", fg="#3b6a91").pack(pady=5)
 
-        self.bt1 = Button(self.janela, width=10, text="Imagem local", command=self.bt1_click)
-        self.bt1.pack()
+        Label(frame_principal, text="Imagem da Internet:", font=("Arial", 12), bg="#e8f1f8", fg="#3b6a91").pack(pady=5)
+        self.ed = Entry(frame_principal, font=("Arial", 12), width=30)
+        self.ed.pack(pady=5)
+        self.create_button(frame_principal, "Baixar", self.bt3_click, "#4aa3df").pack(pady=5)
 
-        Label(self.janela, text="ou").pack()
-        Label(self.janela, text="Internet:").pack()
-
-        self.ed = Entry(self.janela)
-        self.ed.pack()
-
-        self.bt3 = Button(self.janela, width=8, text="Baixar", command=self.bt3_click)
-        self.bt3.pack()
-
-        Label(self.janela, text="").pack()
-
-        self.lb2 = Label(self.janela, text="Filtros:")
-        self.lb2.pack()
+        Label(frame_principal, text="Filtros:", font=("Arial", 12), bg="#e8f1f8", fg="#3b6a91").pack(pady=10)
 
         self.listFiltros = [
             "Preto e Branco",
@@ -57,21 +68,24 @@ class App:
             "Filtro Cartoon"
         ]
 
-        self.cb = ttk.Combobox(self.janela, values=self.listFiltros)
+        self.cb = ttk.Combobox(frame_principal, values=self.listFiltros, font=("Arial", 12), width=25)
         self.cb.set("Selecione:")
-        self.cb.pack()
+        self.cb.pack(pady=5)
 
-        self.bt2 = Button(self.janela, width=8, text="Aplicar", command=self.bt2_click)
-        self.bt2.pack()
+        self.create_button(frame_principal, "Aplicar", self.bt2_click, "#4aa3df").pack(pady=10)
 
-        Label(self.janela, text="").pack()
+        self.create_button(frame_principal, "Voltar ao Menu", self.voltar_menu, "#ffa500").pack(pady=20)
 
-        self.bt4 = Button(self.janela, width=8, text="Sair", command=self.bt4_click)
-        self.bt4.pack()
-    
-    def is_valid_url(self,url):
+        self.janela.mainloop()
+
+    def create_button(self, parent, text, command, color):
+        button = Button(parent, text=text, font=("Arial", 12), width=20, bg=color, fg="white", relief="groove", command=command)
+        button.bind("<Enter>", lambda e: button.configure(bg="#1f4e79"))
+        button.bind("<Leave>", lambda e: button.configure(bg=color))
+        return button
+
+    def is_valid_url(self, url):
         parsed = urlparse(url)
-        # Verifica se a URL tem esquema (http/https) e domínio (netloc)
         return bool(parsed.scheme) and bool(parsed.netloc)
 
     def escolher_diretorio(self):
@@ -80,21 +94,18 @@ class App:
             self.caminho_onde_salvar = diretorio
             messagebox.showinfo("Diretório Selecionado", f"Diretório escolhido: {diretorio}")
         else:
-            messagebox.showinfo("Nenhum diretorio escolhido")
+            messagebox.showinfo("Erro", "Nenhum diretório escolhido.")
 
     def bt1_click(self):
         arquivos = filedialog.askopenfilenames()
         if self.caminho_onde_salvar is None:
-             messagebox.showwarning("Erro", "o Usuário não definiu uma pasta para salvar os arquivos ")
+            messagebox.showwarning("Erro", "O usuário não definiu uma pasta para salvar os arquivos.")
         if not arquivos:
-            self.lb1["text"] = "Nenhum arquivo selecionado."
             messagebox.showwarning("Erro", "Por favor, adicione uma imagem ou URL!")
             return
 
         self.imagem.set_local_img(arquivos[0])
-        self.lb1["text"] = f"Imagem carregada: {arquivos[0]}"
-    #botão que aplica o filtro
-    
+
     def bt2_click(self):
         try:
             filtro = self.cb.get()
@@ -162,12 +173,8 @@ class App:
         except Exception as e:
                 messagebox.showerror("Erro Inesperado!", f"Detalhes: {e}")
 
-    def bt4_click(self):
-        self.janela.destroy()
-
     def run(self):
-        self.janela.mainloop()
-
+        self.menu_inicial.mainloop()
 
 if __name__ == "__main__":
     app = App()
