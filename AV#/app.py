@@ -2,13 +2,14 @@ from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from urllib.parse import urlparse
 from Imagem import *
-from Filtros import *
+from filtros import *
 import os
 
 class App:
     def __init__(self):
         self.imagem = Imagem()
-        self.lista_de_imagens = []
+        self.lista_de_imagens_inp = set()
+        self.lista_de_imagens_flt = set()
         self.caminho_onde_salvar = None
 
         # Tela inicial (menu principal)
@@ -74,6 +75,8 @@ class App:
 
         self.create_button(frame_principal, "Aplicar", self.bt2_click, "#4aa3df").pack(pady=10)
 
+        self.create_button(frame_principal, "Listar Imagens", self.listar_imagens, "#4aa3df").pack(pady=10)
+
         self.create_button(frame_principal, "Voltar ao Menu", self.voltar_menu, "#ffa500").pack(pady=20)
 
         self.janela.mainloop()
@@ -100,11 +103,13 @@ class App:
         arquivos = filedialog.askopenfilenames()
         if self.caminho_onde_salvar is None:
             messagebox.showwarning("Erro", "O usuário não definiu uma pasta para salvar os arquivos.")
+            return
         if not arquivos:
             messagebox.showwarning("Erro", "Por favor, adicione uma imagem ou URL!")
             return
 
         self.imagem.set_local_img(arquivos[0])
+        self.lista_de_imagens_inp.add(self.imagem.get_img_path())
 
     def bt2_click(self):
         try:
@@ -148,6 +153,7 @@ class App:
                 messagebox.showerror("Erro", resultado)
             else:
                 resultado.show_image()
+                self.lista_de_imagens_flt.add(resultado.get_img_path())
                 messagebox.showinfo("Imagem carregada!", "A imagem foi exibida com o filtro escolhido.")
 
         except Exception as e:
@@ -156,22 +162,41 @@ class App:
     def bt3_click(self):
         try:
             link = self.ed.get()
-
             if not link:
                 messagebox.showerror("Erro!", "Nenhum endereço foi passado!")
-            else:
-                if self.is_valid_url(link):
-                    if self.caminho_onde_salvar == None:
-                        messagebox.showinfo("Nenhum diretorio escolhido")
-                        return
-                    if link:
-                        self.imagem.set_public_img(link,self.caminho_onde_salvar)
-                        messagebox.showinfo("Imagem carregada!", "A imagem escolhida foi carregada com sucesso!")
-                else:
-                    messagebox.showerror("Erro!", "Endereço inválido!")
-                
+                return  # Para evitar continuar se não houver link
+            
+            if not self.is_valid_url(link):
+                messagebox.showerror("Erro!", "Endereço inválido!")
+                return  # Para evitar continuar com um link inválido
+            
+            if self.caminho_onde_salvar is None:
+                messagebox.showerror("Erro!", "Nenhum diretório foi escolhido para salvar!")
+                return  # Garante que essa mensagem seja clara e interrompe a função
+            
+            # Caso todas as verificações passem
+            self.imagem.set_public_img(link, self.caminho_onde_salvar)
+            self.lista_de_imagens_inp.add(self.imagem.get_img_path())
+            messagebox.showinfo("Imagem carregada!", "A imagem escolhida foi carregada com sucesso!")
+        
         except Exception as e:
-                messagebox.showerror("Erro Inesperado!", f"Detalhes: {e}")
+            messagebox.showerror("Erro Inesperado!", f"Detalhes: {e}")
+
+    def listar_imagens(self):
+        try:
+            if not self.lista_de_imagens_inp and not self.lista_de_imagens_flt:
+                messagebox.showinfo("Imagens Salvas", "Nenhuma imagem foi carregada ou filtrada ainda.")
+                return
+            
+            imagens_entrada = "\n".join(self.lista_de_imagens_inp) if self.lista_de_imagens_inp else "Nenhuma imagem de entrada."
+            imagens_filtradas = "\n".join(self.lista_de_imagens_flt) if self.lista_de_imagens_flt else "Nenhuma imagem filtrada."
+            
+            messagebox.showinfo(
+                "Imagens Salvas",
+                f"Imagens de Entrada:\n{imagens_entrada}\n\nImagens Filtradas:\n{imagens_filtradas}"
+            )
+        except Exception as e:
+            messagebox.showerror("Erro Inesperado", f"Detalhes: {e}")   
 
     def run(self):
         self.menu_inicial.mainloop()
